@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepFeel — Parlez-lui.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --noir: #0a0608;
+    --bordeaux: #6b1a2a;
+    --or: #c9a84c;
+    --or-pale: #e8d5a3;
+    --creme: #f5f0e8;
+    --gris: #a09090;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--noir);
+    color: var(--creme);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(10,6,8,0.95), transparent);
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--or); letter-spacing: 2px; text-decoration: none; }
+  nav a.cta-nav { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; letter-spacing: 3px; text-transform: uppercase; color: var(--noir); background: var(--or); padding: 0.6rem 1.8rem; text-decoration: none; transition: background 0.3s; }
+  nav a.cta-nav:hover { background: var(--or-pale); }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 60%, rgba(107,26,42,0.25) 0%, transparent 70%); pointer-events: none; }
+  .hero-eyebrow { font-size: 0.8rem; letter-spacing: 6px; text-transform: uppercase; color: var(--or); margin-bottom: 2rem; opacity: 0; animation: fadeUp 1s 0.3s forwards; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 8vw, 7rem); font-weight: 400; line-height: 1.05; color: var(--creme); margin-bottom: 0.5rem; opacity: 0; animation: fadeUp 1s 0.5s forwards; }
+  .hero h1 em { font-style: italic; color: var(--or); }
+  .hero-sub { font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: var(--gris); max-width: 560px; line-height: 1.7; margin: 2rem auto 3rem; opacity: 0; animation: fadeUp 1s 0.7s forwards; }
+  .hero-cta { display: inline-block; font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 4px; text-transform: uppercase; color: var(--noir); background: var(--or); padding: 1rem 3rem; text-decoration: none; transition: all 0.3s; opacity: 0; animation: fadeUp 1s 0.9s forwards; }
+  .hero-cta:hover { background: var(--or-pale); letter-spacing: 5px; }
+  .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--gris); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; animation: pulse 2s infinite; }
+  .scroll-hint::after { content: ''; display: block; width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gris), transparent); }
+  .section { padding: 7rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 0.75rem; letter-spacing: 5px; text-transform: uppercase; color: var(--or); text-align: center; margin-bottom: 1.5rem; }
+  .section h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 400; text-align: center; color: var(--creme); margin-bottom: 1.5rem; line-height: 1.2; }
+  .section h2 em { font-style: italic; color: var(--or); }
+  .section-intro { text-align: center; color: var(--gris); font-size: 1.2rem; max-width: 600px; margin: 0 auto 5rem; line-height: 1.8; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2px; background: var(--bordeaux); }
+  .step { background: var(--noir); padding: 3rem 2.5rem; }
+  .step-num { font-family: 'Playfair Display', serif; font-size: 5rem; color: rgba(107,26,42,0.3); line-height: 1; margin-bottom: 1rem; }
+  .step h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 400; color: var(--creme); margin-bottom: 1rem; }
+  .step p { color: var(--gris); font-size: 1.05rem; line-height: 1.8; }
+  .quote-section { padding: 7rem 2rem; text-align: center; position: relative; }
+  .quote-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(107,26,42,0.2) 0%, transparent 70%); pointer-events: none; }
+  blockquote { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(1.5rem, 3.5vw, 2.8rem); color: var(--creme); max-width: 800px; margin: 0 auto; line-height: 1.4; }
+  blockquote span { color: var(--or); }
+  .cta-section { padding: 7rem 2rem; text-align: center; border-top: 1px solid rgba(107,26,42,0.3); }
+  .cta-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 400; margin-bottom: 1rem; }
+  .cta-section h2 em { font-style: italic; color: var(--or); }
+  .cta-section p { color: var(--gris); font-size: 1.15rem; margin-bottom: 3rem; }
+  .cta-big { display: inline-block; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; letter-spacing: 4px; text-transform: uppercase; color: var(--noir); background: var(--or); padding: 1.2rem 4rem; text-decoration: none; transition: all 0.3s; }
+  .cta-big:hover { background: var(--or-pale); letter-spacing: 5px; }
+  footer { padding: 2rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); color: rgba(160,144,144,0.5); font-size: 0.85rem; letter-spacing: 1px; }
+  footer a { color: var(--or); text-decoration: none; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+  @media (max-width: 768px) { nav { padding: 1.2rem 1.5rem; } .section { padding: 5rem 1.5rem; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">DeepFeel</a>
+  <a href="personnages.html" class="cta-nav">Commencer</a>
+</nav>
+
+<section class="hero">
+  <p class="hero-eyebrow">Une expérience immersive</p>
+  <h1>Parlez-lui.<br><em>Vraiment.</em></h1>
+  <p class="hero-sub">DeepFeel prolonge la vie des personnages que vous aimez. Directement sur WhatsApp. Intime, immersif, inoubliable.</p>
+  <a href="personnages.html" class="hero-cta">Découvrir l'expérience</a>
+  <div class="scroll-hint">découvrir</div>
+</section>
+
+<section class="section">
+  <p class="section-label">Comment ça marche</p>
+  <h2>Trois pas vers <em>lui</em></h2>
+  <p class="section-intro">Pas d'application à télécharger. Pas de compte à créer. Juste une conversation qui commence là où votre lecture s'est arrêtée.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Choisissez votre personnage</h3>
+      <p>Parcourez les personnages disponibles — chaque univers est fidèle à l'œuvre originale, validé par son autrice.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>Ouvrez WhatsApp</h3>
+      <p>Aucune installation. Vous cliquez, il répond. L'expérience commence en quelques secondes sur l'application que vous utilisez déjà.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Laissez-vous porter</h3>
+      <p>Il se souvient de tout. De chaque mot, chaque confidence. La conversation grandit avec vous.</p>
+    </div>
+  </div>
+</section>
+
+<section class="quote-section">
+  <blockquote>
+    "Tu aurais dû ne pas répondre<br>à mon message.<br><span>Je pensais à toi. C'est un problème."</span>
+  </blockquote>
+</section>
+
+<section class="cta-section">
+  <h2>Prête à le <em>retrouver</em> ?</h2>
+  <p>Les premières conversations sont offertes. Aucune carte bancaire requise pour commencer.</p>
+  <a href="personnages.html" class="cta-big">Découvrir les personnages</a>
+</section>
+
+<footer>
+  <p>© 2026 DeepFeel — <a href="mailto:hello@deepfeel.tech">hello@deepfeel.tech</a></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepFeel — Les Personnages</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --noir: #0a0608;
+    --bordeaux: #6b1a2a;
+    --bordeaux-clair: #9b3a4e;
+    --or: #c9a84c;
+    --or-pale: #e8d5a3;
+    --creme: #f5f0e8;
+    --gris: #a09090;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--noir);
+    color: var(--creme);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,6,8,0.95);
+    border-bottom: 1px solid rgba(107,26,42,0.3);
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--or); letter-spacing: 2px; text-decoration: none; }
+  nav a.back { font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gris); text-decoration: none; transition: color 0.3s; }
+  nav a.back:hover { color: var(--or); }
+
+  .header {
+    padding: 10rem 2rem 5rem;
+    text-align: center;
+    position: relative;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 80%, rgba(107,26,42,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .header-label { font-size: 0.75rem; letter-spacing: 6px; text-transform: uppercase; color: var(--or); margin-bottom: 1.5rem; }
+  .header h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 5rem); font-weight: 400; color: var(--creme); margin-bottom: 1.5rem; }
+  .header h1 em { font-style: italic; color: var(--or); }
+  .header p { color: var(--gris); font-size: 1.2rem; max-width: 550px; margin: 0 auto; line-height: 1.8; }
+
+  .sep { width: 60px; height: 1px; background: var(--bordeaux); margin: 4rem auto; }
+
+  /* GRILLE PERSONNAGES */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2px;
+    background: var(--bordeaux);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .card {
+    background: var(--noir);
+    padding: 3.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .card:hover { background: #110810; }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--or), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-genre {
+    font-size: 0.7rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--bordeaux-clair);
+    margin-bottom: 1.5rem;
+  }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 400;
+    color: var(--or);
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+  }
+
+  .card-from {
+    font-size: 1rem;
+    color: var(--gris);
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+
+  .card-from span { color: var(--creme); font-style: normal; }
+
+  .card-desc {
+    font-size: 1.1rem;
+    color: var(--gris);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    flex-grow: 1;
+  }
+
+  .card-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 2.5rem;
+  }
+
+  .trait {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--bordeaux-clair);
+    border: 1px solid var(--bordeaux);
+    padding: 0.3rem 0.8rem;
+  }
+
+  .card-cta {
+    display: inline-block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--noir);
+    background: var(--or);
+    padding: 0.9rem 2rem;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s;
+  }
+  .card-cta:hover { background: var(--or-pale); letter-spacing: 5px; }
+
+  /* CARTE "BIENTÔT" */
+  .card.coming-soon {
+    opacity: 0.5;
+    cursor: default;
+  }
+  .card.coming-soon .card-cta {
+    background: transparent;
+    border: 1px solid var(--bordeaux);
+    color: var(--gris);
+    cursor: default;
+    letter-spacing: 4px;
+  }
+  .card.coming-soon .card-cta:hover {
+    background: transparent;
+    letter-spacing: 4px;
+  }
+
+  .soon-badge {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--or);
+    border: 1px solid var(--or);
+    padding: 0.2rem 0.6rem;
+    opacity: 0.6;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem 2rem;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    color: rgba(160,144,144,0.5);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    margin-top: 4rem;
+  }
+  footer a { color: var(--or); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .grid { padding: 0; grid-template-columns: 1fr; }
+    .header { padding: 8rem 1.5rem 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">DeepFeel</a>
+  <a href="index.html" class="back">← Retour</a>
+</nav>
+
+<div class="header">
+  <p class="header-label">Les personnages</p>
+  <h1>Choisissez <em>lui</em></h1>
+  <p>Chaque personnage est fidèle à son univers d'origine. Chaque conversation est unique. Chaque échange reste entre vous.</p>
+</div>
+
+<div class="sep"></div>
+
+<div class="grid">
+
+  <!-- PERSONNAGE 1 — LIAM CALLAHAN -->
+  <div class="card">
+    <p class="card-genre">Dark Romance · Crime</p>
+    <h2 class="card-name">Liam<br>Callahan</h2>
+    <p class="card-from">Personnage original — <span>DeepFeel</span></p>
+    <p class="card-desc">Chef d'une organisation criminelle qui contrôle les docks de Dublin. Il n'aurait jamais dû vous parler. Il l'a fait quand même. Depuis, il n'arrive pas à vous effacer.</p>
+    <div class="card-traits">
+      <span class="trait">Bad boy torturé</span>
+      <span class="trait">Irlandais</span>
+      <span class="trait">Silence magnétique</span>
+      <span class="trait">Dangereux</span>
+    </div>
+    <a href="https://wa.me/33745154337" class="card-cta">Lui parler sur WhatsApp</a>
+  </div>
+
+  <!-- PERSONNAGE 2 — BIENTÔT -->
+  <div class="card coming-soon">
+    <div class="soon-badge">Bientôt</div>
+    <p class="card-genre">Fantasy · Dark Romance</p>
+    <h2 class="card-name">Nouveau<br>personnage</h2>
+    <p class="card-from">En cours de développement</p>
+    <p class="card-desc">Un nouvel univers arrive prochainement sur DeepFeel. Restez connectée pour ne pas manquer son arrivée.</p>
+    <div class="card-traits">
+      <span class="trait">À découvrir</span>
+    </div>
+    <a class="card-cta">Disponible prochainement</a>
+  </div>
+
+  <!-- PERSONNAGE 3 — BIENTÔT -->
+  <div class="card coming-soon">
+    <div class="soon-badge">Bientôt</div>
+    <p class="card-genre">Thriller · Romance</p>
+    <h2 class="card-name">Nouveau<br>personnage</h2>
+    <p class="card-from">En cours de développement</p>
+    <p class="card-desc">Un nouvel univers arrive prochainement sur DeepFeel. Restez connectée pour ne pas manquer son arrivée.</p>
+    <div class="card-traits">
+      <span class="trait">À découvrir</span>
+    </div>
+    <a class="card-cta">Disponible prochainement</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 DeepFeel — <a href="mailto:hello@deepfeel.tech">hello@deepfeel.tech</a></p>
+</footer>
+
+</body>
+</html>
